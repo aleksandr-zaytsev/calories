@@ -18,6 +18,26 @@ public class MealTo {
         this.excess = excess;
     }
 
+    @SuppressWarnings("unused")
+    public LocalDateTime getDateTime() {
+        return dateTime;
+    }
+
+    @SuppressWarnings("unused")
+    public String getDescription() {
+        return description;
+    }
+
+    @SuppressWarnings("unused")
+    public int getCalories() {
+        return calories;
+    }
+
+    @SuppressWarnings("unused")
+    public boolean isExcess() {
+        return excess;
+    }
+
     @Override
     public String toString() {
         return "MealTo{" +

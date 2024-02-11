@@ -1,5 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
-<%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="ru.javawebinar.topjava.util.TimeUtil" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html lang="ru">
 <head>
@@ -23,7 +23,7 @@
         <jsp:useBean id="mealsTo" scope="request" type="java.util.List"/>
         <c:forEach items="${mealsTo}" var="mealTo">
             <tr class="${mealTo.excess ? 'excess' : 'notexcess'}">
-                <td>${mealTo.dateTime.format(DateTimeFormatter.ofPattern("dd.MM.yyyy hh:mm"))}</td>
+                <td><a href="meals?id=${mealTo.id}&action=view">${mealTo.dateTime.format(TimeUtil.DATE_TIME_FORMATTER)}</a>
                 <td>${mealTo.description}</td>
                 <td>${mealTo.calories}</td>
                 <td><a href="meals?action=update">Update</a></td>

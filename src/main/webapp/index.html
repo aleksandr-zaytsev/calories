@@ -6,9 +6,21 @@
 <body>
 <h3>Проект <a href="https://github.com/JavaWebinar/topjava" target="_blank">Java Enterprise (Topjava)</a></h3>
 <hr>
+<section>
+    <form method="get" action="users.jsp">
+        <input type="hidden" name="action" value="logUser">
+        <label>Select user:
+            <select size="2" name="loggedUser">
+                <option value="1">Admin</option>
+                <option value="2">User</option>
+            </select>
+        </label>
+        <button type="submit">Login with selected user</button>
+    </form>
+</section>
 <ul style="font-size: large">
-    <li><a href="users">Users</a></li>
-    <li><a href="meals">Meals</a></li>
+    <li><a href="users.jsp">Users</a></li>
+    <li><a href="meals.jsp">Meals</a></li>
 </ul>
 </body>
 </html>

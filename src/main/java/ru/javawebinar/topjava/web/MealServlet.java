@@ -12,7 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Objects;
 
@@ -54,6 +56,16 @@ public class MealServlet extends HttpServlet {
         response.sendRedirect("meals");
     }
 
+    private LocalDate getDateFromRequest(HttpServletRequest request, String paramName) {
+        String paramValue = request.getParameter(paramName);
+        return paramValue != null && !paramValue.isEmpty() ? LocalDate.parse(paramValue) : null;
+    }
+
+    private LocalTime getTimeFromRequest(HttpServletRequest request, String paramName) {
+        String paramValue = request.getParameter(paramName);
+        return paramValue != null && !paramValue.isEmpty() ? LocalTime.parse(paramValue) : null;
+    }
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String action = request.getParameter("action");
@@ -73,14 +85,28 @@ public class MealServlet extends HttpServlet {
                 request.setAttribute("meal", meal);
                 request.getRequestDispatcher("/mealForm.jsp").forward(request, response);
                 break;
+            case "filter":
+                log.info("filter");
+                request.getSession().setAttribute("fromDate", getDateFromRequest(request, "fromDate"));
+                request.getSession().setAttribute("fromTime", getTimeFromRequest(request, "fromTime"));
+                request.getSession().setAttribute("toDate", getDateFromRequest(request, "toDate"));
+                request.getSession().setAttribute("toTime", getTimeFromRequest(request, "toTime"));
+                response.sendRedirect("meals");
+                break;
             case "all":
             default:
                 log.info("getAll");
-                request.setAttribute("meals", mealRestController.getAll());
+                LocalDate fromDate = (LocalDate) request.getSession().getAttribute("fromDate");
+                LocalTime fromTime = (LocalTime) request.getSession().getAttribute("fromTime");
+                LocalDate toDate = (LocalDate) request.getSession().getAttribute("toDate");
+                LocalTime toTime = (LocalTime) request.getSession().getAttribute("toTime");
+                request.setAttribute("meals", mealRestController.getAll(fromDate, fromTime, toDate, toTime));
                 request.getRequestDispatcher("/meals.jsp").forward(request, response);
                 break;
         }
     }
+
+
 
     private int getId(HttpServletRequest request) {
         String paramId = Objects.requireNonNull(request.getParameter("id"));

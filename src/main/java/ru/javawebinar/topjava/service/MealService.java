@@ -5,6 +5,7 @@ import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -16,8 +17,8 @@ public class MealService {
         this.repository = repository;
     }
 
-    public List<Meal> getAll(int authUserId) {
-        return repository.getAll(authUserId);
+    public List<Meal> getAll(int authUserId, LocalDate fromDate, LocalDate toDate) {
+        return repository.getAll(authUserId, fromDate, toDate);
     }
 
     public Meal get(int id, int authUserId) {

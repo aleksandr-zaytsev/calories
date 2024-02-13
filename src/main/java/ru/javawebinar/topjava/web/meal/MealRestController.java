@@ -9,6 +9,8 @@ import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
@@ -20,13 +22,20 @@ import static ru.javawebinar.topjava.web.SecurityUtil.authUserId;
 public class MealRestController {
     protected final Logger log = LoggerFactory.getLogger(getClass());
     @Autowired
-    private MealService service;
+    private final MealService service;
 
-    public List<MealTo> getAll() {
-        log.info("getAll");
-        return MealsUtil.getTos(service.getAll(authUserId()), authUserCaloriesPerDay());
+    public MealRestController(MealService service) {
+        this.service = service;
     }
 
+    public List<MealTo> getAll(LocalDate fromDate, LocalTime fromTime, LocalDate toDate, LocalTime toTime) {
+        log.info("getAll");
+        return MealsUtil.getFilteredTos(service.getAll(authUserId(), fromDate, toDate),
+                authUserCaloriesPerDay(), fromTime, toTime);
+    }
+    public List<MealTo> getAll() {
+        return getAll(null,null,null,null);
+    }
     public Meal get(int id) {
         log.info("get {}", id);
         return service.get(id, authUserId());

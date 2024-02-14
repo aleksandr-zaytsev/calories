@@ -3,10 +3,11 @@ package ru.javawebinar.topjava.service;
 import org.springframework.stereotype.Service;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
-import ru.javawebinar.topjava.util.exception.NotFoundException;
 
 import java.time.LocalDate;
 import java.util.List;
+
+import static ru.javawebinar.topjava.util.ValidationUtil.checkNotFoundWithId;
 
 @Service
 public class MealService {
@@ -17,34 +18,27 @@ public class MealService {
         this.repository = repository;
     }
 
-    public List<Meal> getAll(int authUserId, LocalDate fromDate, LocalDate toDate) {
-        return repository.getAll(authUserId, fromDate, toDate);
+    public List<Meal> getAll(int userId) {
+        return repository.getAll(userId);
     }
 
-    public Meal get(int id, int authUserId) {
-        return ifNullThrowNotFound(repository.get(id, authUserId), id, authUserId);
+    public List<Meal> getAllFiltered(int userId, LocalDate fromDate, LocalDate toDate) {
+        return repository.getAllFiltered(userId, fromDate, toDate);
     }
 
-    public Meal create(Meal meal, int authUserId) {
-        return ifNullThrowNotFound(repository.save(meal, authUserId), meal.getId(), authUserId);
+    public Meal get(int id, int userId) {
+        return checkNotFoundWithId(repository.get(id, userId), id);
     }
 
-    public void delete(int id, int authUserId) {
-        if (!repository.delete(id, authUserId)) {
-            throw new NotFoundException(
-                    String.format("Meal with id=%d and userId=%d not found", id, authUserId));
-        }
+    public Meal create(Meal meal, int userId) {
+        return repository.save(meal, userId);
     }
 
-    public void update(Meal meal, int authUserId) {
-        ifNullThrowNotFound(repository.save(meal, authUserId), meal.getId(), authUserId);
+    public void delete(int id, int userId) {
+        checkNotFoundWithId(repository.delete(id, userId), id);
     }
 
-    private Meal ifNullThrowNotFound(Meal meal, int id, int authUserId) {
-        if (meal != null) {
-            return meal;
-        }
-        throw new NotFoundException(
-                String.format("Meal with id=%d and userId=%d not found", id, authUserId));
+    public void update(Meal meal, int userId) {
+        checkNotFoundWithId(repository.save(meal, userId), meal.getId());
     }
 }

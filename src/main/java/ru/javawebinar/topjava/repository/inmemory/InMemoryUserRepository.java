@@ -6,7 +6,6 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.User;
 import ru.javawebinar.topjava.repository.UserRepository;
 
-//import java.awt.desktop.UserSessionEvent;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -32,8 +31,7 @@ public class InMemoryUserRepository implements UserRepository {
             repository.put(user.getId(), user);
             return user;
         }
-        // handle case: update, but not present in storage
-        return repository.computeIfPresent(user.getId(), (id, oldMeal) -> user);
+        return repository.computeIfPresent(user.getId(), (id, oldUser) -> user);
     }
 
     @Override
@@ -48,7 +46,7 @@ public class InMemoryUserRepository implements UserRepository {
 
         return repository.values().stream()
                 .sorted(Comparator.comparing(User::getName, String::compareTo)
-                .thenComparing(User::getEmail, String::compareTo))
+                        .thenComparing(User::getEmail, String::compareTo))
                 .collect(Collectors.toList());
     }
 
@@ -57,7 +55,7 @@ public class InMemoryUserRepository implements UserRepository {
         log.info("getByEmail {}", email);
 
         return repository.values().stream()
-                .filter(user -> user.getEmail().equals(email))
+                .filter(user -> user.getEmail().equalsIgnoreCase(email))
                 .findFirst()
                 .orElse(null);
     }

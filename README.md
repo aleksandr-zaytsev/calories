@@ -1,5 +1,8 @@
 [Java Enterprise Online Project](https://javaops.ru/view/topjava)
 ===============================
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2045147ab4bc4ebdbecc376172634518)](https://app.codacy.com/gh/aleksandr-zaytsev/calories?utm_source=github.com&utm_medium=referral&utm_content=aleksandr-zaytsev/calories&utm_campaign=Badge_Grade)
+
 Разработка полнофункционального Spring/JPA Enterprise приложения c авторизацией и правами доступа на основе ролей с использованием наиболее популярных инструментов и технологий Java: Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), Bootstrap (css,js), DataTables, jQuery + plugins, Java 8 Stream and Time API и хранением в базах данных Postgresql и HSQLDB.
 
 ![topjava_structure](https://javaops.ru/static/images/projects/top-scheme.jpg)

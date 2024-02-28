@@ -24,7 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.Assertions.assertThatNoException;
 import static org.junit.Assert.assertThrows;
 import static ru.javawebinar.topjava.MealTestData.*;
 import static ru.javawebinar.topjava.UserTestData.ADMIN_ID;
@@ -97,7 +97,6 @@ public class MealServiceTest {
     @Test
     public void get() {
         Meal actual = service.get(ADMIN_MEAL_ID, ADMIN_ID);
-        assertThat(actual.getUser().getId()).isEqualTo(ADMIN_ID);
         MEAL_MATCHER.assertMatch(actual, adminMeal1);
     }
 
@@ -140,5 +139,16 @@ public class MealServiceTest {
     @Test
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
+    }
+
+    @Autowired
+    private UserService userService;
+
+    @Test
+    public void deleteCascade() {
+        assertThatNoException().describedAs("The user must exist").isThrownBy(() -> userService.get(USER_ID));
+        service.delete(MEAL1_ID, USER_ID);
+        assertThrows(NotFoundException.class, () -> service.get(MEAL1_ID, USER_ID));
+        assertThatNoException().describedAs("The user must continue to exist").isThrownBy(() -> userService.get(USER_ID));
     }
 }

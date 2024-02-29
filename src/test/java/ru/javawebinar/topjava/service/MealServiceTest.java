@@ -40,6 +40,9 @@ import static ru.javawebinar.topjava.UserTestData.USER_ID;
 public class MealServiceTest {
 
     @Autowired
+    private UserService userService;
+
+    @Autowired
     private MealService service;
 
     private static final Logger log = LoggerFactory.getLogger(MealServiceTest.class);
@@ -140,9 +143,6 @@ public class MealServiceTest {
     public void getBetweenWithNullDates() {
         MEAL_MATCHER.assertMatch(service.getBetweenInclusive(null, null, USER_ID), meals);
     }
-
-    @Autowired
-    private UserService userService;
 
     @Test
     public void deleteCascade() {

@@ -26,7 +26,7 @@
           p:password="${database.password}"/>
 
     <beans profile="jdbc">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
+        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc.user"/>
 
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <constructor-arg ref="dataSource"/>
@@ -35,6 +35,19 @@
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
+
+        <beans profile="hsqldb">
+            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.JdbcHsqlMealRepository">
+                <constructor-arg ref="jdbcTemplate"/>
+                <constructor-arg ref="namedJdbcTemplate"/>
+            </bean>
+        </beans>
+        <beans profile="postgres">
+            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.JdbcPostgresMealRepository">
+                <constructor-arg ref="jdbcTemplate"/>
+                <constructor-arg ref="namedJdbcTemplate"/>
+            </bean>
+        </beans>
     </beans>
 
     <beans profile="jpa,datajpa">

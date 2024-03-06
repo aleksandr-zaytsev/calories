@@ -16,8 +16,6 @@
         <jdbc:script encoding="utf-8" location="classpath:db/populateDB.sql"/>
     </jdbc:initialize-database>
 
-    <tx:annotation-driven/>
-
     <bean id="dataSource"
           class="${database.class}"
           p:driverClassName="${database.driver_class_name}"
@@ -26,7 +24,7 @@
           p:password="${database.password}"/>
 
     <beans profile="jdbc">
-        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc.user"/>
+        <context:component-scan base-package="ru.javawebinar.**.repository.jdbc"/>
 
         <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
             <constructor-arg ref="dataSource"/>
@@ -35,22 +33,11 @@
         <bean id="namedJdbcTemplate" class="org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate">
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
-
-        <beans profile="hsqldb">
-            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.JdbcHsqlMealRepository">
-                <constructor-arg ref="jdbcTemplate"/>
-                <constructor-arg ref="namedJdbcTemplate"/>
-            </bean>
-        </beans>
-        <beans profile="postgres">
-            <bean id="mealRepository" class="ru.javawebinar.topjava.repository.jdbc.meal.JdbcPostgresMealRepository">
-                <constructor-arg ref="jdbcTemplate"/>
-                <constructor-arg ref="namedJdbcTemplate"/>
-            </bean>
-        </beans>
     </beans>
 
     <beans profile="jpa,datajpa">
+        <tx:annotation-driven/>
+
         <bean id="entityManagerFactory" class="org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean"
               p:dataSource-ref="dataSource"
               p:packagesToScan="ru.javawebinar.**.model">
@@ -79,7 +66,6 @@
 
     <beans profile="jpa">
         <context:component-scan base-package="ru.javawebinar.**.repository.jpa"/>
-        <jpa:repositories base-package="ru.javawebinar.**.repository.jpa"/>
     </beans>
 
     <beans profile="datajpa">

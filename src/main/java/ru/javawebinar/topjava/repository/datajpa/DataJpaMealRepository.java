@@ -4,8 +4,10 @@ import org.springframework.stereotype.Repository;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.repository.MealRepository;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class DataJpaMealRepository implements MealRepository {
@@ -19,11 +21,12 @@ public class DataJpaMealRepository implements MealRepository {
     }
 
     @Override
+    @Transactional
     public Meal save(Meal meal, int userId) {
-        meal.setUser(userRepository.getReferenceById(userId));
         if (!meal.isNew() && get(meal.id(), userId) == null) {
             return null;
         }
+        meal.setUser(userRepository.getReferenceById(userId));
         return mealRepository.save(meal);
     }
 
@@ -34,7 +37,8 @@ public class DataJpaMealRepository implements MealRepository {
 
     @Override
     public Meal get(int id, int userId) {
-        return mealRepository.get(id, userId);
+        Optional<Meal> optionalMeal = mealRepository.findById(id);
+        return optionalMeal.isPresent() && optionalMeal.get().getUser().getId() == userId ? optionalMeal.get() : null;
     }
 
     @Override

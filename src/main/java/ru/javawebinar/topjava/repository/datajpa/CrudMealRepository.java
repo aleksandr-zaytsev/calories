@@ -10,10 +10,11 @@ import ru.javawebinar.topjava.model.Meal;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
-    @Query("select m from Meal m where m.id = :id and m.user.id = :userId")
-    Meal get(@Param("id") Integer id, @Param("userId") Integer userId);
+    @Query("SELECT m FROM Meal m WHERE m.id = :id AND m.user.id = :userId")
+    Meal get(@Param("id") Integer id, @Param("userId") int userId);
 
     @Modifying
     @Transactional

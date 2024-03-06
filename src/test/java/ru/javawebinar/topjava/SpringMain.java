@@ -20,7 +20,7 @@ public class SpringMain {
         try (GenericXmlApplicationContext appCtx = new GenericXmlApplicationContext()) {
             ConfigurableEnvironment env = appCtx.getEnvironment();
             env.setActiveProfiles(Profiles.REPOSITORY_IMPLEMENTATION, Profiles.getActiveDbProfile());
-            appCtx.load("spring/spring-app.xml", "spring/inmemory.xml");
+            appCtx.load("spring/spring-app.xml", "spring/spring-db.xml");
             appCtx.refresh();
 
             System.out.println("Bean definition names: " + Arrays.toString(appCtx.getBeanDefinitionNames()));

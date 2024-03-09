@@ -13,9 +13,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
 
-    @Query("SELECT m FROM Meal m WHERE m.id = :id AND m.user.id = :userId")
-    Meal get(@Param("id") Integer id, @Param("userId") int userId);
-
     @Modifying
     @Transactional
     @Query("DELETE FROM Meal m WHERE m.id = :id AND m.user.id = :userId")
@@ -31,4 +28,7 @@ public interface CrudMealRepository extends JpaRepository<Meal, Integer> {
     List<Meal> getBetweenHalfOpen(@Param("startTime") LocalDateTime startTime,
                                   @Param("endTime") LocalDateTime endTime,
                                   @Param("userId") int userId);
+
+    @Query("SELECT m FROM Meal m JOIN FETCH m.user WHERE m.user.id = :userId AND m.id = :id ORDER BY m.dateTime DESC")
+    Meal getByIdWithUser(@Param("id") int id, @Param("userId") int userId);
 }

@@ -2,7 +2,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
 
-
 <html>
 <jsp:include page="fragments/headTag.jsp"/>
 <head>
@@ -12,15 +11,10 @@
 <body>
 <jsp:include page="fragments/bodyHeader.jsp"/>
 <section>
-    <h2><c:choose>
-        <c:when test="${action =='create'}">
-            <spring:message code="meal.newmeal"/>
-        </c:when>
-        <c:otherwise>
-            <spring:message code="meal.editmeal"/>
-        </c:otherwise>
-    </c:choose></h2>
     <jsp:useBean id="meal" type="ru.javawebinar.topjava.model.Meal" scope="request"/>
+    <h2>
+        <spring:message code="${meal.isNew() ? 'meal.newmeal' : 'meal.editmeal'}"/>
+    </h2>
     <form method="post" action="<spring:url value="/meals"/>">
         <input type="hidden" name="id" value="${meal.id}">
         <dl>

@@ -1,6 +1,5 @@
 package ru.javawebinar.topjava;
 
-
 import org.springframework.context.support.GenericXmlApplicationContext;
 import ru.javawebinar.topjava.model.Role;
 import ru.javawebinar.topjava.model.User;

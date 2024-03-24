@@ -1,9 +1,7 @@
 package ru.javawebinar.topjava.service;
 
 import org.junit.Before;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.test.context.ActiveProfiles;
@@ -22,7 +20,6 @@ import static ru.javawebinar.topjava.UserTestData.*;
 
 
 @ActiveProfiles(NO_CACHE)
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Autowired
@@ -85,7 +82,7 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
     }
 
     @Test
-    public void updateUpdateAndThenGetAll() {
+    public void updateAndThenGetAll() {
         USER_MATCHER.assertMatch(service.getAll(), admin, guest, user);
     }
 
@@ -100,12 +97,11 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     public void changeRole() {
-        User createdUser = service.create(new User(null, "Ivan Pupkin", "pupkin@ya.ru", "qwerty", Role.USER, Role.ADMIN));
+        User user = service.get(ADMIN_ID);
+        user.setRoles(List.of(Role.USER));
+        service.update(user);
+        User updatedUser = service.get(user.id());
 
-        createdUser.setRoles(List.of(Role.USER));
-        service.update(createdUser);
-        User updatedUser = service.get(createdUser.id());
-
-        USER_MATCHER.assertMatch(updatedUser, createdUser);
+        USER_MATCHER.assertMatch(updatedUser, user);
     }
 }

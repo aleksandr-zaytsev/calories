@@ -32,7 +32,7 @@ public class JdbcMealRepository implements MealRepository {
 
     public JdbcMealRepository(JdbcTemplate jdbcTemplate, NamedParameterJdbcTemplate namedParameterJdbcTemplate, Validator validator) {
         this.insertMeal = new SimpleJdbcInsert(jdbcTemplate)
-                .withTableName("meals")
+                .withTableName("meal")
                 .usingGeneratedKeyColumns("id");
 
         this.jdbcTemplate = jdbcTemplate;

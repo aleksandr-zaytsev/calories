@@ -72,6 +72,8 @@
 
         <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
               p:dataSource-ref="dataSource"/>
+
+            <bean id="validator" class="org.springframework.validation.beanvalidation.LocalValidatorFactoryBean"/>
     </beans>
 
     <beans profile="jpa,datajpa">

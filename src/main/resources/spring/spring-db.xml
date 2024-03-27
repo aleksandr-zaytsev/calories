@@ -16,7 +16,7 @@
 <!-- Change DB by comment/uncomment property-placeholder -->
 
     <!--     <context:property-placeholder location="classpath:db/postgres.properties" system-properties-mode="OVERRIDE"/>-->
-       <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/>
+     <!--  <context:property-placeholder location="classpath:db/hsqldb.properties" system-properties-mode="OVERRIDE"/> -->
 
 <!--
     For postgres driver logging
@@ -83,7 +83,7 @@
             <constructor-arg ref="jdbcTemplate"/>
         </bean>
 
-        <bean id="transactionManager"
+       <bean id="transactionManager"
               class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
             <property name="dataSource" ref="dataSource" />
         </bean>

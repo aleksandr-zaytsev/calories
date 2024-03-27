@@ -2,8 +2,9 @@ package ru.javawebinar.topjava.web;
 
 import org.assertj.core.matcher.AssertionMatcher;
 import org.junit.jupiter.api.Test;
-import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.model.User;
+import ru.javawebinar.topjava.to.MealTo;
+import ru.javawebinar.topjava.util.MealsUtil;
 
 import java.util.List;
 
@@ -34,16 +35,18 @@ class RootControllerTest extends AbstractControllerTest {
 
     @Test
     void getMeals() throws Exception {
+
+
         perform(get("/meals"))
                 .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(view().name("meals"))
                 .andExpect(forwardedUrl("/WEB-INF/jsp/meals.jsp"))
                 .andExpect(model().attribute("meals",
-                        new AssertionMatcher<List<Meal>>() {
+                        new AssertionMatcher<List<MealTo>>() {
                             @Override
-                            public void assertion(List<Meal> actual) throws AssertionError {
-                                MEAL_MATCHER.assertMatch(actual, meal1, meal2, meal3, meal4, meal5, meal6, meal7, adminMeal1, adminMeal2);
+                            public void assertion(List<MealTo> actual) throws AssertionError {
+                                MEALTO_MATCHER.assertMatch(actual, MealsUtil.getTos(meals,SecurityUtil.authUserCaloriesPerDay()));
                             }
                         }
                 ));

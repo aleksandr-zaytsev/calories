@@ -31,7 +31,7 @@
             <dt><spring:message code="meal.endTime"/>:</dt>
             <dd><input type="time" name="endTime"></dd>
         </dl>
-        <button class="btn btn-primary" type="button" onclick="filterTable()">
+        <button class="btn btn-primary" type="button" onclick="updateTable()">
             <spring:message code="meal.filter"/>
         </button>
         <button class="btn btn-primary" type="clean" onclick="cleanFilter()">

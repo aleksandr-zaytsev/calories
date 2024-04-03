@@ -9,7 +9,7 @@ const ctx = {
 $(function () {
     $('#datetimepicker').datetimepicker({
         format: 'd.m.Y H:i',
-        closeOnDateSelect:true,
+        closeOnDateSelect: true,
     });
     makeEditable(
         $("#datatable").DataTable({

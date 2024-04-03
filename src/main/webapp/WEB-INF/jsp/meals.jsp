@@ -14,24 +14,29 @@
     <div class="container">
         <h3 class="text-center"><spring:message code="meal.title"/></h3>
 
-    <form method="get" action="meals/filter">
+    <form id="filterDetails">
         <dl>
             <dt><spring:message code="meal.startDate"/>:</dt>
-            <dd><input type="date" name="startDate" value="${param.startDate}"></dd>
+            <dd><input type="date" name="startDate"></dd>
         </dl>
         <dl>
             <dt><spring:message code="meal.endDate"/>:</dt>
-            <dd><input type="date" name="endDate" value="${param.endDate}"></dd>
+            <dd><input type="date" name="endDate"></dd>
         </dl>
         <dl>
             <dt><spring:message code="meal.startTime"/>:</dt>
-            <dd><input type="time" name="startTime" value="${param.startTime}"></dd>
+            <dd><input type="time" name="startTime"></dd>
         </dl>
         <dl>
             <dt><spring:message code="meal.endTime"/>:</dt>
-            <dd><input type="time" name="endTime" value="${param.endTime}"></dd>
+            <dd><input type="time" name="endTime"></dd>
         </dl>
-        <button type="submit"><spring:message code="meal.filter"/></button>
+        <button class="btn btn-primary" type="button" onclick="filterTable()">
+            <spring:message code="meal.filter"/>
+        </button>
+        <button class="btn btn-primary" type="clean" onclick="cleanFilter()">
+            <spring:message code="meal.filterClean"/>
+        </button>
     </form>
         <button class="btn btn-primary" onclick="add()">
             <span class="fa fa-plus"></span>
@@ -49,7 +54,7 @@
             </thead>
         <c:forEach items="${requestScope.meals}" var="meal">
             <jsp:useBean id="meal" type="ru.javawebinar.topjava.to.MealTo"/>
-            <tr data-meal-excess="${meal.excess}">
+            <tr data-meal-excess="${meal.excess}" id="${meal.id}">
                 <td>
                         <%--${meal.dateTime.toLocalDate()} ${meal.dateTime.toLocalTime()}--%>
                         <%--<%=TimeUtil.toString(meal.getDateTime())%>--%>
@@ -58,8 +63,8 @@
                 </td>
                 <td>${meal.description}</td>
                 <td>${meal.calories}</td>
-                <td><a href="meals/update?id=${meal.id}"><spring:message code="common.update"/></a></td>
-                <td><a href="meals/delete?id=${meal.id}"><spring:message code="common.delete"/></a></td>
+                <td><a><span class="fa fa-pencil"></span></a></td>
+                <td><a class="delete"><span class="fa fa-remove"></span></a></td>
             </tr>
         </c:forEach>
     </table>

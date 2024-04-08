@@ -80,11 +80,9 @@ public abstract class AbstractUserServiceTest extends AbstractServiceTest {
 
     @Test
     void enabled() {
-        boolean expected = !service.get(USER_ID).isEnabled();
+        service.enabled(USER_ID, false);
 
-        service.enabled(USER_ID, expected);
-
-        assertThat(service.get(USER_ID).isEnabled()).isEqualTo(expected);
+        assertThat(service.get(USER_ID).isEnabled()).isEqualTo(false);
     }
 
     @Test

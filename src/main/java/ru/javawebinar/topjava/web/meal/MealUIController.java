@@ -16,10 +16,10 @@ import java.util.List;
 @RequestMapping(value = "/meals", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MealUIController extends AbstractMealController {
 
-   @Override
+    @Override
     @GetMapping
-   public List<MealTo> getAll() {
-       return super.getAll();
+    public List<MealTo> getAll() {
+        return super.getAll();
     }
 
     @Override
@@ -32,9 +32,9 @@ public class MealUIController extends AbstractMealController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public void create(
-        @RequestParam LocalDateTime dateTime,
-        @RequestParam String description,
-        @RequestParam int calories) {
+            @RequestParam LocalDateTime dateTime,
+            @RequestParam String description,
+            @RequestParam int calories) {
         super.create(new Meal(dateTime, description, calories));
     }
 

@@ -1,9 +1,9 @@
 let form;
-let filterForm;
+
 function makeEditable(datatableApi) {
     ctx.datatableApi = datatableApi;
+    ctx.updateTable = simpleUpdateTable;
     form = $('#detailsForm');
-    filterForm = $('#filterDetails');
     $(".delete").click(function () {
         if (confirm('Are you sure?')) {
             deleteRow($(this).closest('tr').attr("id"));
@@ -28,31 +28,15 @@ function deleteRow(id) {
         url: ctx.ajaxUrl + id,
         type: "DELETE"
     }).done(function () {
-        updateTable();
+        ctx.updateTable();
         successNoty("Deleted");
     });
 }
 
-function updateTable() {
-    if (ctx.useFilter) {
-        $.ajax({
-            type: "GET",
-            url: ctx.ajaxUrl + 'filter',
-            data: filterForm.serialize()
-        }).done(function (data) {
-            updateTableByData(data);
-        });
-        return true;
-    }
-
+function simpleUpdateTable() {
     $.get(ctx.ajaxUrl, function (data) {
-        ctx.datatableApi.clear().rows.add(data).draw();
+        updateTableByData(data);
     });
-}
-
-function cleanFilter() {
-    filterForm[0].clean();
-    updateTable();
 }
 
 function updateTableByData(data) {
@@ -66,7 +50,7 @@ function save() {
         data: form.serialize()
     }).done(function () {
         $("#editRow").modal("hide");
-        updateTable();
+        ctx.updateTable();
         successNoty("Saved");
     });
 }

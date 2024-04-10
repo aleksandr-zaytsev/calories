@@ -17,9 +17,58 @@ function clearFilter() {
     $.get(mealAjaxUrl, updateTableByData);
 }
 
+$.ajaxSetup({
+    converters: {
+        "text json": function (text) {
+            let json = JSON.parse(text);
+            if (typeof json === 'object') {
+                $(json).each(function () {
+                    if (this.hasOwnProperty('dateTime')) {
+                        this.dateTime = formatDate(new Date(this.dateTime));
+                    }
+                });
+            }
+            return json;
+        }
+    }
+});
+
 $(function () {
+    $('#datetimepicker').datetimepicker({
+        format: 'Y-m-d H:i',
+        closeOnDateSelect: true,
+    });
+
+    $('#startTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+        closeOnDateSelect: true,
+    });
+
+    $('#endTime').datetimepicker({
+        datepicker: false,
+        format: 'H:i',
+        closeOnDateSelect: true,
+    });
+
+    $('#startDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d',
+        closeOnDateSelect: true,
+    });
+
+    $('#endDate').datetimepicker({
+        timepicker: false,
+        format: 'Y-m-d',
+        closeOnDateSelect: true,
+    });
+
     makeEditable(
         $("#datatable").DataTable({
+            "ajax": {
+                "url": mealAjaxUrl,
+                "dataSrc": ""
+            },
             "paging": false,
             "info": true,
             "columns": [
@@ -34,11 +83,13 @@ $(function () {
                 },
                 {
                     "defaultContent": "Edit",
-                    "orderable": false
+                    "orderable": false,
+                    "render": renderEditBtn
                 },
                 {
                     "defaultContent": "Delete",
-                    "orderable": false
+                    "orderable": false,
+                    "render": renderDeleteBtn
                 }
             ],
             "order": [
@@ -46,7 +97,10 @@ $(function () {
                     0,
                     "desc"
                 ]
-            ]
+            ],
+            "createdRow": function (row, data, dataIndex) {
+                $(row).attr("data-meal-excess", data.excess);
+            }
         })
     );
 });

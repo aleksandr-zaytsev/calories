@@ -1,6 +1,7 @@
 package ru.javawebinar.topjava.util;
 
 import ru.javawebinar.topjava.model.Meal;
+import ru.javawebinar.topjava.to.AcceptedMealTo;
 import ru.javawebinar.topjava.to.MealTo;
 
 import java.time.LocalDate;
@@ -41,13 +42,13 @@ public class MealsUtil {
         return new MealTo(meal.getId(), meal.getDateTime(), meal.getDescription(), meal.getCalories(), excess);
     }
 
-    public static Meal createNewFromTo(MealTo mealTo) {
-        return new Meal(null, mealTo.getDateTime(), mealTo.getDescription().toLowerCase(), mealTo.getCalories());
+    public static Meal createNewFromAcceptedTo(AcceptedMealTo acceptedMealTo) {
+        return new Meal(null, acceptedMealTo.getDateTime(), acceptedMealTo.getDescription().toLowerCase(), acceptedMealTo.getCalories());
     }
 
-    public static Meal fromTo(MealTo mealTo) {
-        Meal meal = createNewFromTo(mealTo);
-        meal.setId(mealTo.getId());
+    public static Meal fromAcceptedTo(AcceptedMealTo acceptedMealTo) {
+        Meal meal = createNewFromAcceptedTo(acceptedMealTo);
+        meal.setId(acceptedMealTo.getId());
         return meal;
     }
 }

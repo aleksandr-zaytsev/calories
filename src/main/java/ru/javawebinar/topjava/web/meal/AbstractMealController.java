@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.lang.Nullable;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
+import ru.javawebinar.topjava.to.AcceptedMealTo;
 import ru.javawebinar.topjava.to.MealTo;
 import ru.javawebinar.topjava.util.MealsUtil;
 import ru.javawebinar.topjava.web.SecurityUtil;
@@ -14,8 +15,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static ru.javawebinar.topjava.util.MealsUtil.createNewFromTo;
-import static ru.javawebinar.topjava.util.MealsUtil.fromTo;
+import static ru.javawebinar.topjava.util.MealsUtil.*;
 import static ru.javawebinar.topjava.util.ValidationUtil.assureIdConsistent;
 import static ru.javawebinar.topjava.util.ValidationUtil.checkNew;
 
@@ -50,11 +50,11 @@ public abstract class AbstractMealController {
         return service.create(meal, userId);
     }
 
-    public Meal createFromTo(MealTo mealTo) {
+    public Meal createFromAcceptedTo(AcceptedMealTo acceptedMealTo) {
         int userId = SecurityUtil.authUserId();
-        log.info("create {} for user {}", mealTo, userId);
-        checkNew(mealTo);
-        return service.create(createNewFromTo(mealTo), userId);
+        log.info("create {} for user {}", acceptedMealTo, userId);
+        checkNew(acceptedMealTo);
+        return service.create(createNewFromAcceptedTo(acceptedMealTo), userId);
     }
 
     public void update(Meal meal, int id) {
@@ -64,11 +64,11 @@ public abstract class AbstractMealController {
         service.update(meal, userId);
     }
 
-    public void updateFromTo(MealTo mealTo, int id) {
+    public void updateFromAcceptedTo(AcceptedMealTo acceptedMealTo, int id) {
         int userId = SecurityUtil.authUserId();
-        log.info("update {} for user {}", mealTo, userId);
-        assureIdConsistent(mealTo, id);
-        service.update(fromTo(mealTo), userId);
+        log.info("update {} for user {}", acceptedMealTo, userId);
+        assureIdConsistent(acceptedMealTo, id);
+        service.update(fromAcceptedTo(acceptedMealTo), userId);
     }
 
     /**

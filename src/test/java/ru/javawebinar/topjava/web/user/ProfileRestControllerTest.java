@@ -14,12 +14,13 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import javax.servlet.http.Cookie;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.UsersUtil.asTo;
+import static ru.javawebinar.topjava.util.UsersUtil.createNewFromTo;
 import static ru.javawebinar.topjava.web.user.ProfileRestController.REST_URL;
 
 class ProfileRestControllerTest extends AbstractControllerTest {
@@ -53,7 +54,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     @Test
     void register() throws Exception {
         UserTo newTo = new UserTo(null, "newName", "newemail@ya.ru", "newPassword", 1500);
-        User newUser = UsersUtil.createNewFromTo(newTo);
+        User newUser = createNewFromTo(newTo);
         ResultActions action = perform(MockMvcRequestBuilders.post(REST_URL)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(JsonUtil.writeValue(newTo)))
@@ -71,7 +72,7 @@ class ProfileRestControllerTest extends AbstractControllerTest {
     void update() throws Exception {
         perform(MockMvcRequestBuilders.put(REST_URL).contentType(MediaType.APPLICATION_JSON)
                 .with(userHttpBasic(user))
-                .content(JsonUtil.writeValue(UsersUtil.asTo(user))))
+                .content(JsonUtil.writeValue(asTo(user))))
                 .andDo(print())
                 .andExpect(status().isNoContent());
         USER_MATCHER.assertMatch(userService.get(USER_ID), user);
@@ -133,5 +134,21 @@ class ProfileRestControllerTest extends AbstractControllerTest {
                         "[caloriesPerDay] must be between 10 and 10000",
                         "[email] must not be blank",
                         "[password] must not be blank")));
+    }
+
+    @Test
+    void duplicateEmail() throws Exception {
+        UserTo someUserTo = asTo(getNew());
+        someUserTo.setEmail(user.getEmail());
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .cookie(new Cookie("topjavaLocaleCookie", "en"))
+                .content(JsonUtil.writeValue(someUserTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL))
+                .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details[0]", is(
+                        "[email] User with this email already exists")));
     }
 }

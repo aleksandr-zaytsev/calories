@@ -14,14 +14,14 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import javax.servlet.http.Cookie;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 import static ru.javawebinar.topjava.TestUtil.userHttpBasic;
 import static ru.javawebinar.topjava.UserTestData.*;
+import static ru.javawebinar.topjava.util.UsersUtil.asTo;
 
 class AdminRestControllerTest extends AbstractControllerTest {
 
@@ -186,5 +186,22 @@ class AdminRestControllerTest extends AbstractControllerTest {
                         "[caloriesPerDay] must be between 10 and 10000",
                         "[email] must not be blank",
                         "[password] must not be blank")));
+    }
+
+    @Test
+    void duplicateEmail() throws Exception {
+        UserTo someUserTo = asTo(getNew());
+        someUserTo.setEmail(user.getEmail());
+        perform(MockMvcRequestBuilders.put(REST_URL + USER_ID)
+                .contentType(MediaType.APPLICATION_JSON)
+                .with(userHttpBasic(admin))
+                .cookie(new Cookie("topjavaLocaleCookie", "en"))
+                .content(JsonUtil.writeValue(someUserTo)))
+                .andDo(print())
+                .andExpect(status().isUnprocessableEntity())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL + USER_ID))
+                .andExpect(jsonPath("$.type").value("VALIDATION_ERROR"))
+                .andExpect(jsonPath("$.details[0]", is(
+                        "[email] User with this email already exists")));
     }
 }

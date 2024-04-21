@@ -5,6 +5,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 import ru.javawebinar.topjava.model.Meal;
 import ru.javawebinar.topjava.service.MealService;
 import ru.javawebinar.topjava.util.exception.NotFoundException;
@@ -13,8 +15,9 @@ import ru.javawebinar.topjava.web.json.JsonUtil;
 
 import javax.servlet.http.Cookie;
 
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
+//import static org.hamcrest.Matchers.containsInAnyOrder;
+//import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.*;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -161,5 +164,21 @@ class MealRestControllerTest extends AbstractControllerTest {
                         "[dateTime] must not be null",
                         "[calories] must be between 10 and 5000",
                         "[description] must not be blank")));
+    }
+    @Test
+    // https://stackoverflow.com/a/42333941/20265936
+    @Transactional(propagation = Propagation.NEVER)
+    void duplicateMealDateTime() throws Exception {
+        Meal someMeal = new Meal(null, meal1.getDateTime(), "some meal", 500);
+        perform(MockMvcRequestBuilders.post(REST_URL)
+                .contentType(MediaType.APPLICATION_JSON)
+                .cookie(new Cookie("topjavaLocaleCookie", "en"))
+                .with(userHttpBasic(user))
+                .content(JsonUtil.writeValue(someMeal)))
+                .andExpect(status().isConflict())
+                .andExpect(jsonPath("$.url").value("http://localhost" + REST_URL))
+                .andExpect(jsonPath("$.type").value("DATA_ERROR"))
+                .andExpect(jsonPath("$.details[0]", is(
+                        "You already registered meal for that date/time")));
     }
 }

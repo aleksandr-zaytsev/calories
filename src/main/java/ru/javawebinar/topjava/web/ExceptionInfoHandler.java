@@ -31,6 +31,7 @@ import static ru.javawebinar.topjava.util.exception.ErrorType.*;
 public class ExceptionInfoHandler {
     private static Logger log = LoggerFactory.getLogger(ExceptionInfoHandler.class);
 
+
     private final MessageSourceAccessor messageSourceAccessor;
 
     public ExceptionInfoHandler(MessageSource messageSource) {
